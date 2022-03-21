@@ -20,8 +20,10 @@ router.post('/create_post', upload.single("myImageField"), async (req,res)=>{
         const result = await cloudinary.uploader.upload(req.file.path);
         console.log(result);
 
+        const username = req.user.username;
+
         const post = new UserPostDB({
-            username: req.user.username,
+            username: username,
             postinfo: {
                 title: req.body.title,
                 description: req.body.description,
@@ -40,24 +42,32 @@ router.post('/create_post', upload.single("myImageField"), async (req,res)=>{
         //     }
         // });
 
-        UserPostDB.findOne({ username: username }, function (err, user) {
-            if (err) console.log(err);
-
-            if (user) {
-                
-                console.log('choose another username');
-            }
+        post.save(function (err) {
+            if (err)
+                console.log(err);
             else {
-                post.save(function (err) {
-                    if (err)
-                        console.log(err);
-                    else {
-                        //req.flash('success', 'You are now registered!');
-                    }
-                });
+                //req.flash('success', 'You are now registered!');
             }
-
         });
+
+        // UserPostDB.findOne({ username: username }, function (err, user) {
+        //     if (err) console.log(err);
+
+        //     if (user) {
+                
+        //         console.log('choose another username');
+        //     }
+        //     else {
+        //         post.save(function (err) {
+        //             if (err)
+        //                 console.log(err);
+        //             else {
+        //                 //req.flash('success', 'You are now registered!');
+        //             }
+        //         });
+        //     }
+
+        // });
 
         res.redirect('/user/profile')
     }
