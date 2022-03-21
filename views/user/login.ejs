@@ -1,0 +1,25 @@
+<h1> <%= title %> </h1>
+
+<% if(messages.error){ %>
+    <%= messages.error %>
+<% } %>
+
+<form method="post" action="/user/login">
+
+    
+    <div class="form-group">
+        <label for="">Username</label>
+        <input type="text" class="form-control" name="username" placeholder="Userame">
+    </div><br>
+
+    <div class="form-group">
+        <label for="">Password</label>
+        <input type="password" class="form-control" name="password" placeholder="Password">
+    </div><br>
+
+    <br>
+    <button class="btn btn-outline-dark" style= "position: absolute; right:50%"  >Login</button>
+    
+    <a href="/user/signup">Signup</a>
+
+  </form>

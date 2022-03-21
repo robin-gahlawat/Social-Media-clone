@@ -1,0 +1,39 @@
+<html>
+
+<body>
+
+
+  <form action="/user/logout?_method=DELETE" method="POST">
+    <br>
+    <button style="position: absolute; right: 10%" type="submit">Log Out</button>
+    <br><br>
+  </form>
+
+  <h1 style="position: absolute; right: 50%"> Profile Page of <%= name %>
+  </h1>
+
+
+  <button onclick="location.href='/user/update_profile'" type="button">Update Profile</button>
+  <br><br>
+  <button onclick="location.href='/post/create_post'" type="button">Create Post</button>
+
+  <div class="row products">
+
+    <% post.forEach(function(p) { %>
+
+      <div>
+        <h1><%= p.postinfo.title %></h1>
+      </div>
+
+      <% }); %>
+
+
+
+  </div>
+
+
+
+</body>
+
+
+</html>
