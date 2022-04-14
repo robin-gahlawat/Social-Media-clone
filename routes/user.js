@@ -88,6 +88,7 @@ router.get('/profile',auth , function(req, res){
         
         res.render('user/profile',{
             name: req.user.name,
+            username: req.user.username,
             post: post
         });
     });
@@ -96,17 +97,6 @@ router.get('/profile',auth , function(req, res){
 });
 
 
-
-
-
-// function checkAuthenticated(req, res, next){
-//     if(req.isAuthenticated()){
-//         return next();
-//     }
-//     else{
-//         res.redirect('/user/login');
-//     }
-// }
 
 function checkNotAuthenticated(req, res, next){
     if(req.isAuthenticated()){

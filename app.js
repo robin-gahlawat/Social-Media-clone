@@ -55,10 +55,11 @@ app.use(methodOverride('_method'))
 // Setting up routes.
 const user = require('./routes/user.js');
 const post = require('./routes/post.js');
-
+const update_profile = require('./routes/update_profile');
 
 app.use('/user', user);
 app.use('/post', post);
+app.use('/update_profile', update_profile);
 
 
 app.delete('/user/logout', (req,res)=>{

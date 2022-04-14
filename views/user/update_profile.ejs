@@ -1,0 +1,44 @@
+<html>
+    <body>
+        <h1>Welcome <%= user.username %> </h1>
+
+        <form method="post" action="/update_profile">
+        
+        
+            <div>
+                <label for="">Name</label>
+                <input type="text" name="name" placeholder="<%= user.name %>">
+            </div><br>
+        
+            <div>
+                <label for="">Email</label>
+                <input type="text" name="email" placeholder="<%= user.email %>">
+            </div><br>
+        
+            <div>
+                <label for="">Date of Birth</label>
+                <input type="text" name="dob" placeholder="<%= user.dateofbirth %>">
+            </div><br>
+        
+            <div>
+                <label for="">City</label>
+                <input type="text" name="city" placeholder="<%= user.city %>">
+            </div><br>
+        
+            <div>
+                <label for="">Country</label>
+                <input type="text" name="country" placeholder="<%= user.country %>">
+            </div><br>
+        
+            <div>
+                <label for="">About me</label>
+                <input type="text" name="aboutme" placeholder="<%= user.about_me %>">
+            </div><br>
+        
+            <button style="position: absolute; right: 50%">Update</button>
+        
+        </form>
+
+
+    </body>
+</html>

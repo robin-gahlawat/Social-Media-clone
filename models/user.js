@@ -20,6 +20,21 @@ var UserSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    profile_pic:{
+        type: String
+    },
+    dateofbirth:{
+        type: Date
+    },
+    City:{
+        type: String
+    },
+    Country:{
+        type: String
+    },
+    about_me:{
+        type: String
+    }
 
 });
 

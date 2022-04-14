@@ -13,13 +13,17 @@
   </h1>
 
 
-  <button onclick="location.href='/user/update_profile'" type="button">Update Profile</button>
+  <button onclick="location.href='/update_profile'" type="button">Update Profile</button>
   <br><br>
   <button onclick="location.href='/post/create_post'" type="button">Create Post</button>
 
   <div class="row products">
 
+
+
     <% post.forEach(function(p) { %>
+
+      <% if(p.username == username) { %>
 
       <div>
         <h1><%= p.postinfo.title %></h1>
@@ -28,8 +32,10 @@
 
       </div>
 
-      <% }); %>
+      <% } %>
 
+
+      <% }); %>
 
 
   </div>
