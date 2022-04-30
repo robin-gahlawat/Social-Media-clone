@@ -98,6 +98,23 @@ router.get('/profile',auth , function(req, res){
 
 
 
+router.post('/otherprofile',auth , function(req, res){
+
+
+    UserPostDB.find(function(err, post){
+        if(err)
+            console.log(err);
+        
+        res.render('user/otherprofile',{
+            username: req.body.search,
+            post: post
+        });
+    });
+
+});
+
+
+
 function checkNotAuthenticated(req, res, next){
     if(req.isAuthenticated()){
         return res.redirect('/user/profile');

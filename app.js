@@ -1,16 +1,21 @@
 
 const express = require('express');
 
+const http = require('http');
 const mongoose = require('mongoose');
-
+const socketio = require('socket.io')
 const passport = require('passport');
 const methodOverride = require('method-override');
  
 const flash = require('express-flash');
 const session = require('express-session');
 
+const UserPostDB = require('./models/userpost');
+
+
 // App initialiaztion
 const app = express();
+const server  = http.createServer(app);
 
 // To transfer data from frontend to request of post method.
 app.use(express.urlencoded({ extended: false }))
@@ -23,15 +28,14 @@ db.once('open', function(){
     console.log('connected to database.');
 })
 
+
 // Setting up  view engine.
 app.set('view engine', 'ejs');
 
 
 // Setting up passport
-
 const initializePassport = require('./config/passport-config')
 initializePassport(passport);
-
 app.use(flash());
 app.use(session({
     secret: 'key1',
@@ -43,15 +47,6 @@ app.use(passport.session());
 app.use(methodOverride('_method'))
 
 
-
-
-// Setting up passport
-//require('./config/passport-config')(passport);
-//app.use(passport.initialize());
-//app.use(passport.session());
-
-
-
 // Setting up routes.
 const user = require('./routes/user.js');
 const post = require('./routes/post.js');
@@ -61,20 +56,61 @@ app.use('/user', user);
 app.use('/post', post);
 app.use('/update_profile', update_profile);
 
-
 app.delete('/user/logout', (req,res)=>{
     req.logOut();
     res.redirect('/user/login');
-})
+});
 
 
+
+// Setting up socket io
+
+const io = socketio(server);
+
+io.on('connection', socket=>{
+
+    socket.on('like',postID=>{
+        UserPostDB.findById({_id: postID}, function(err, post){
+            if(err){
+                console.log(err);
+            }
+            else{
+                post.likes = post.likes + 1;
+                post.save(function(err){
+                    if(err)
+                        console.log(err);
+                })
+            }
+        });
+    });
+
+    socket.on('dislike',postID=>{
+        UserPostDB.findById({_id: postID}, function(err, post){
+            if(err){
+                console.log(err);
+            }
+            else{
+                post.likes = post.likes - 1;
+                post.save(function(err){
+                    if(err)
+                        console.log(err);
+                })
+            }
+        });
+    });
+
+    socket.on('comment', ({username, comment_message})=>{
+        console.log(username + ' : ' + comment_message);
+    })
+
+});
 
 
 
 
 // Starting server.
 
-app.listen(3002,()=>{
+server.listen(3002,()=>{
     console.log('Server is up on 3002');
 })
 

@@ -15,7 +15,10 @@ var UserSchema = mongoose.Schema({
         description:    {type : String},
         imageurl:   {type : String},
         cloudinaryid:   {type : String}
-      }
+    },
+    likes:{
+        type: Number
+    }
 
 });
 

@@ -1,0 +1,174 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="css/main.css" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+  <style>
+
+  
+  .topnav {
+    overflow: hidden;
+    background-color: #4a44a6;
+  }
+  
+  .topnav .search-container {
+    float: right;
+  }
+  
+  .topnav input[type=text] {
+    padding: 6px;
+    margin-top: 8px;
+    font-size: 17px;
+    border: none;
+  }
+  
+  .topnav .search-container button {
+    float: right;
+    padding: 6px 10px;
+    margin-top: 8px;
+    margin-right: 16px;
+    background: #ddd;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .topnav .search-container button:hover {
+    background: rgb(40, 122, 79);
+  }
+  
+  @media screen and (max-width: 600px) {
+    .topnav .search-container {
+      float: none;
+    }
+    .topnav a, .topnav input[type=text], .topnav .search-container button {
+      float: none;
+      display: block;
+      text-align: left;
+      width: 100%;
+      margin: 0;
+      padding: 14px;
+    }
+    .topnav input[type=text] {
+      border: 1px solid #ccc;  
+    }
+  }
+
+
+
+  .fa {
+  font-size: 20px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.fa:hover {
+  color: darkblue;
+}
+
+
+  </style>
+
+</head>
+
+<body>
+
+    <div class="topnav">
+      <div class="search-container">
+        <form action="/user/otherprofile" method="POST">
+          <input type="text" placeholder="Search.." name="search">
+          <button type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+
+
+
+  <div class="row products" >
+
+        <div style="background-color: aqua;">
+          <h1><%= post.postinfo.title %></h1>
+          <h3><%= post.postinfo.description %></h3>
+          <img src="<%= post.postinfo.imageurl %>" alt="Flowers in Chania" width="460" height="345">
+          <br>
+
+          <button 
+            id = "likeButton"
+            name = "<%= post._id %>"
+            style="height:30px;">Like</button>
+          <p id = likeCount> <%= post.likes %></p>
+
+          <form id="comment-form">
+            <input
+              id="comment_msg"
+              type="text"
+              placeholder="Post your comment..."
+              required
+              autocomplete="off"
+            />
+            <button id="postButton" class="btn" name = "<%= viewerusername %>"> Post</button>
+          </form>
+
+        </div>
+
+  </div>
+
+</body>
+
+<script
+      src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.2/qs.min.js"
+      integrity="sha256-TDxXjkAUay70ae/QJBEpGKkpVslXaHHayklIVglFRT4="
+      crossorigin="anonymous"
+    ></script>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+  const likeButton = document.getElementById('likeButton');
+  const likeCount = document.getElementById('likeCount');
+
+  const commentForm = document.getElementById('comment-form');
+  const postButton = document.getElementById('postButton');
+
+
+
+  const socket = io();
+
+  likeButton.onclick = function(){
+      postID = likeButton.name;
+    
+    if(likeButton.innerHTML == 'Like'){
+        socket.emit('like', postID);
+      likeButton.innerHTML = 'Dislike';
+      likeCount.innerHTML = parseInt(likeCount.innerHTML) + 1;
+    }
+    else if(likeButton.innerHTML == 'Dislike'){
+        socket.emit('dislike', postID);
+      likeButton.innerHTML = 'Like';
+      likeCount.innerHTML = parseInt(likeCount.innerHTML) - 1;
+    }
+
+  };
+
+  // Sending comment to server.
+commentForm.addEventListener('submit', (e)=>{
+   e.preventDefault();
+   
+   const comment_message = e.target.elements.comment_msg.value;
+   username = postButton.name;
+   socket.emit('comment', {username, comment_message} );
+
+   // clear input box
+   e.target.elements.comment_msg.value = '';
+})
+
+
+
+
+</script>
+
+
+</html>

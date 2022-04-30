@@ -1,6 +1,90 @@
 <html>
 
+<head>
+  <link rel="stylesheet" href="css/main.css" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+  <style>
+
+  
+  .topnav {
+    overflow: hidden;
+    background-color: #4a44a6;
+  }
+  
+  .topnav .search-container {
+    float: right;
+  }
+  
+  .topnav input[type=text] {
+    padding: 6px;
+    margin-top: 8px;
+    font-size: 17px;
+    border: none;
+  }
+  
+  .topnav .search-container button {
+    float: right;
+    padding: 6px 10px;
+    margin-top: 8px;
+    margin-right: 16px;
+    background: #ddd;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .topnav .search-container button:hover {
+    background: rgb(40, 122, 79);
+  }
+  
+  @media screen and (max-width: 600px) {
+    .topnav .search-container {
+      float: none;
+    }
+    .topnav a, .topnav input[type=text], .topnav .search-container button {
+      float: none;
+      display: block;
+      text-align: left;
+      width: 100%;
+      margin: 0;
+      padding: 14px;
+    }
+    .topnav input[type=text] {
+      border: 1px solid #ccc;  
+    }
+  }
+
+
+
+  .fa {
+  font-size: 20px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.fa:hover {
+  color: darkblue;
+}
+
+
+  </style>
+
+</head>
+
 <body>
+
+    <div class="topnav">
+      <div class="search-container">
+        <form action="/user/otherprofile" method="POST">
+          <input type="text" placeholder="Search.." name="search">
+          <button type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+
 
 
   <form action="/user/logout?_method=DELETE" method="POST">
@@ -12,37 +96,28 @@
   <h1 style="position: absolute; right: 50%"> Profile Page of <%= name %>
   </h1>
 
-
   <button onclick="location.href='/update_profile'" type="button">Update Profile</button>
   <br><br>
   <button onclick="location.href='/post/create_post'" type="button">Create Post</button>
 
-  <div class="row products">
-
-
-
+  <div class="row products" >
     <% post.forEach(function(p) { %>
-
       <% if(p.username == username) { %>
-
-      <div>
-        <h1><%= p.postinfo.title %></h1>
-        <h3><%= p.postinfo.description %></h3>
-        <img src="<%= p.postinfo.imageurl %>" alt="Flowers in Chania" width="460" height="345">
-
-      </div>
+      <a href="/post/<%=p._id%>" style="color:inherit; text-decoration: none;" >
+        <div style="background-color: aqua;">
+          <h1><%= p.postinfo.title %></h1>
+          <h3><%= p.postinfo.description %></h3>
+          <img src="<%= p.postinfo.imageurl %>" alt="Flowers in Chania" width="460" height="345">
+          <br>
+        </div>
+      </a>
 
       <% } %>
-
-
-      <% }); %>
-
-
+    <% }); %>
   </div>
 
-
-
 </body>
+
 
 
 </html>

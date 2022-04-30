@@ -16,7 +16,6 @@ router.get('/create_post', auth, (req,res)=>{
 router.post('/create_post', upload.single("myImageField"), async (req,res)=>{
     
     try{
-        //console.log(req.user.name + ' ' + req.file.originalname);    
         const result = await cloudinary.uploader.upload(req.file.path);
         console.log(result);
 
@@ -29,18 +28,9 @@ router.post('/create_post', upload.single("myImageField"), async (req,res)=>{
                 description: req.body.description,
                 imageurl: result.secure_url,
                 cloudinaryid: result.public_id
-            }
+            },
+            likes: 0
         });
-
-        // post.save(function (err) {
-        //     if (err)
-        //         console.log(err);
-        //     else {
-        //         //req.flash('success', 'You are now registered!');
-        //         //console.log('data inserted');
-        //         //res.redirect('/user/login');
-        //     }
-        // });
 
         post.save(function (err) {
             if (err)
@@ -50,54 +40,36 @@ router.post('/create_post', upload.single("myImageField"), async (req,res)=>{
             }
         });
 
-        // UserPostDB.findOne({ username: username }, function (err, user) {
-        //     if (err) console.log(err);
-
-        //     if (user) {
-                
-        //         console.log('choose another username');
-        //     }
-        //     else {
-        //         post.save(function (err) {
-        //             if (err)
-        //                 console.log(err);
-        //             else {
-        //                 //req.flash('success', 'You are now registered!');
-        //             }
-        //         });
-        //     }
-
-        // });
-
         res.redirect('/user/profile')
     }
     catch(e){
         console.log("Error is : " + e)
     }
-})
+});
 
-// const multer = require('multer');
-// const storage = multer.diskStorage({
-//     destination: (req,file, callback)=>{
-//         callback(null, 'Post_Images');
-//     },
-//     filename: (req,file, callback)=>{
-//         const fileName = Date.now() + file.originalname;
-//         callback(null, fileName)
-//     }
-// });
 
-// const upload = multer({storage: storage})
+router.get('/:id', auth, (req,res)=>{
 
-// router.get('/create_post', auth, (req,res)=>{
-//     res.render('post/post');
-// });
+    const id = req.params.id;
+    const viewerusername = req.user.username;
 
-// router.post('/create_post', upload.single("myImageField"), (req,res)=>{
-//     console.log(req.user.name);
-//     console.log('post created')
-//     res.redirect('/post/create_post')
-// })
+
+    UserPostDB.find(function(err, posts){
+        if(err)
+            console.log(err);
+        
+        posts.forEach(function(post){
+            if(post._id == id){
+                res.render('post/detailed_post',{
+                    viewerusername: viewerusername,
+                    post: post
+                });
+            }
+        });
+        
+    });
+
+});
 
 
 module.exports = router;
