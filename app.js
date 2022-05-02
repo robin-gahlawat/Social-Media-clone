@@ -11,6 +11,8 @@ const flash = require('express-flash');
 const session = require('express-session');
 
 const UserPostDB = require('./models/userpost');
+const UserDB = require('./models/user');
+
 
 
 // App initialiaztion
@@ -69,39 +71,98 @@ const io = socketio(server);
 
 io.on('connection', socket=>{
 
-    socket.on('like',postID=>{
-        UserPostDB.findById({_id: postID}, function(err, post){
+    socket.on('like',(viewpost)=>{
+        const postID = viewpost.postID;
+        const viewerusername = viewpost.viewerusername;
+
+        UserDB.findOne({username: viewerusername}, function(err, user){
             if(err){
                 console.log(err);
             }
             else{
-                post.likes = post.likes + 1;
-                post.save(function(err){
-                    if(err)
-                        console.log(err);
-                })
+
+                if( !(user.likedPosts.includes(postID) == true)  ){
+                    user.likedPosts.push(postID);
+                    user.save();
+
+                    UserPostDB.findById({_id: postID}, function(err, post){
+                        if(err){
+                            console.log(err);
+                        }
+                        else{
+                            post.likes = post.likes + 1;
+                            post.save(function(err){
+                                if(err)
+                                    console.log(err);
+                            });
+                        }
+                    });
+
+                }
             }
         });
     });
 
-    socket.on('dislike',postID=>{
-        UserPostDB.findById({_id: postID}, function(err, post){
+
+
+    socket.on('dislike',(viewpost)=>{
+        const postID = viewpost.postID;
+        const viewerusername = viewpost.viewerusername;
+
+        UserDB.findOne({username: viewerusername}, function(err, user){
             if(err){
                 console.log(err);
             }
             else{
-                post.likes = post.likes - 1;
-                post.save(function(err){
-                    if(err)
-                        console.log(err);
-                })
+
+                if( (user.likedPosts.includes(postID) == true)  ){
+                    user.likedPosts.pull(postID);
+                    user.save();
+
+                    UserPostDB.findById({_id: postID}, function(err, post){
+                        if(err){
+                            console.log(err);
+                        }
+                        else{
+                            post.likes = post.likes - 1;
+                            post.save(function(err){
+                                if(err)
+                                    console.log(err);
+                            })
+                        }
+                    });
+
+                }
+
             }
         });
+
+        
     });
+
+    // socket.on('dislike',postID=>{
+
+
+
+    //     UserPostDB.findById({_id: postID}, function(err, post){
+    //         if(err){
+    //             console.log(err);
+    //         }
+    //         else{
+    //             post.likes = post.likes - 1;
+    //             post.save(function(err){
+    //                 if(err)
+    //                     console.log(err);
+    //             })
+    //         }
+    //     });
+    // });
 
     socket.on('comment', ({username, comment_message})=>{
         console.log(username + ' : ' + comment_message);
-    })
+    });
+
+
 
 });
 

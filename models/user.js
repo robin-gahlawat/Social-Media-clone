@@ -34,6 +34,9 @@ var UserSchema = mongoose.Schema({
     },
     about_me:{
         type: String
+    },
+    likedPosts:{
+        type: Array
     }
 
 });

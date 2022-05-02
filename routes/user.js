@@ -21,7 +21,8 @@ router.post('/signup', async function(req,res){
     const username = req.body.username;
     const email = req.body.email;
     const password = req.body.password;
-    const hashedPassword = await bcrypt.hash(password, 10)
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const likedPosts = ['abc','def'];
 
 
     if(name == "" || username == "" || email == "" || password == ""){
@@ -44,7 +45,8 @@ router.post('/signup', async function(req,res){
                     name: name,
                     username: username,
                     email: email,
-                    password: hashedPassword
+                    password: hashedPassword,
+                    likedPosts: likedPosts
                 });
                 user.save(function (err) {
                     if (err)

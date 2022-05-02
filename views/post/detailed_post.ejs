@@ -133,20 +133,23 @@
   const commentForm = document.getElementById('comment-form');
   const postButton = document.getElementById('postButton');
 
+  const viewerusername = postButton.name;
+  const postID = likeButton.name;
+
+  const viewpost = {postID : postID, viewerusername: viewerusername};
 
 
   const socket = io();
 
   likeButton.onclick = function(){
-      postID = likeButton.name;
     
     if(likeButton.innerHTML == 'Like'){
-        socket.emit('like', postID);
+        socket.emit('like', viewpost);
       likeButton.innerHTML = 'Dislike';
       likeCount.innerHTML = parseInt(likeCount.innerHTML) + 1;
     }
     else if(likeButton.innerHTML == 'Dislike'){
-        socket.emit('dislike', postID);
+        socket.emit('dislike', viewpost);
       likeButton.innerHTML = 'Like';
       likeCount.innerHTML = parseInt(likeCount.innerHTML) - 1;
     }
@@ -158,7 +161,6 @@ commentForm.addEventListener('submit', (e)=>{
    e.preventDefault();
    
    const comment_message = e.target.elements.comment_msg.value;
-   username = postButton.name;
    socket.emit('comment', {username, comment_message} );
 
    // clear input box
